@@ -19,7 +19,7 @@ app.get('/webhook', function (req, res){
 /**
  * Start the server
  */
- var ip_addr = process.env.OPENSHIFT_NODEJS_IP   || process.env.IP || '127.0.0.1';
+ var ip_addr = process.env.OPENSHIFT_NODEJS_IP   || process.env.IP;
  var port    = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || '8080';
 
 app.listen(port,ip_addr,function(){
