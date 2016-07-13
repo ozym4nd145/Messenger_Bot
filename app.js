@@ -4,7 +4,7 @@ var app = express();
 var request = require("request");
 
 app.use(express.static("public"));
-app.use(bodyParser.json({ verify: verifyRequestSignature }));
+app.use(bodyParser.json({}));
 
 app.get("/",function(req,res){
   res.send("home");
