@@ -1,28 +1,17 @@
-
 var express = require("express");
-var expressSanitizer = require("express-sanitizer");
-var methodOverride = require("method-override");
-var bodyParser = require("body-parser");
-// var mongoose = require("mongoose");
-
-// mongoose.connect("mongodb://localhost/yelpcamp");
-
 var app = express();
 
-app.use(methodOverride("_method"));
 app.use(express.static("public");
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(expressSanitizer());
-app.set("view engine", "ejs");
 
 app.get("/",function(req,res){
   res.send("home");
 });
 
-app.get('/webhook', function (req, res) {
-  if (req.query['hub.verify_token'] === 'aerhweiru*(y89iua89w74qolkeq89uq3248689eq&^*T*^(*#her98wyerqy') {
+app.get('/webhook', function (req, res){
+  if (req.query['hub.verify_token'] === "aerhweiru*(y89iua89w74qolkeq89uq3248689eq&^*T*^(*#her98wyerqy") {
     res.send(req.query['hub.challenge']);
-  } else {
+  }
+  else {
     res.send('Error, wrong validation token');
   }
 });
