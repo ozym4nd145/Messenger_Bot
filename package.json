@@ -1,5 +1,5 @@
 {
-  "name": "Messenger Bot",
+  "name": "MessengerBot",
   "version": "1.0.0",
   "description": "Messenger bots for iit delhi tech projects",
   "main": "app.js",
@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
-  "author": "",
+  "author": "suyashagr",
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.0",
