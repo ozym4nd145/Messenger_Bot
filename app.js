@@ -4,7 +4,7 @@ var app = express();
 var request = require("request");
 
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
 app.get("/",function(req,res){
   res.send("home");
@@ -23,6 +23,7 @@ app.get('/webhook', function(req, res) {
 
 
 app.post('/webhook', function (req, res) {
+  console.log("inside post....");
   var data = req.body;
 
   // Make sure this is a page subscription
