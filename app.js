@@ -1,7 +1,24 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-var app = express();
+var mongoose = require("mongoose");
 var request = require("request");
+var Member = require("./models/member");
+
+var app = express();
+var connection_string = 'mongodb://localhost/yelpcamp';
+// if OPENSHIFT env variables are present, use the available connection info:
+if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
+  connection_string = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
+  process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
+  process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+  process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+  process.env.OPENSHIFT_APP_NAME;
+}
+if(process.env.DATABASEURL){
+  connection_string = process.env.DATABASEURL;
+}
+
+mongoose.connect(connection_string);
 
 app.use(express.static("public"));
 app.use(bodyParser.json({}));
@@ -131,13 +148,12 @@ function receivedMessage(event) {
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
-    console.log(messageText);
     switch (messageText) {
       case '@secret_key-Command':
         sendTextMessage(senderID,"Secret command mode not yet implemented");
         break;
       case 'show members':
-        sendGenericMessage(senderID);
+        sendMembers(senderID);
         break;
 
       default:
@@ -158,55 +174,50 @@ function sendTextMessage(recipientId, messageText) {
       text: messageText
     }
   };
-  console.log(messageData);
   callSendAPI(messageData);
 }
 
-function sendGenericMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [{
-            title: "Shubham Agrawal",
-            subtitle: "CEO @ Bozobaka",
-            item_url: "https://www.facebook.com/shubhs0707",
-            image_url: "http://techiitd.herokuapp.com/img/shubham.jpg",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.facebook.com/shubhs0707",
-              title: "Open Facebook Profile"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for second bubble",
-            }]
-          },{
-            title: "Suyash Agrawal",
-            subtitle: "Lead Developer",
-            item_url: "https://github.com/luffy1012/",
-            image_url: "http://techiitd.herokuapp.com/img/suyash.jpg",
-            buttons: [{
-              type: "web_url",
-              url: "https://github.com/luffy1012/",
-              title: "Open Github Page"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
-            }],
-          }]
-        }
-      }
+function sendMembers(recipientId) {
+  Members.find({},function(err,members){
+    if(err){
+      console.log(err);
     }
-  };
+    else{
+      var elements = [];
+      var temp = {};
+      members.forEach(function(member){
+        temp = {};
+        temp.title = member.name;
+        temp.subtitle = member.short_desc;
+        temp.item_url = member.fb_url;
+        temp.image_url = member.image_url;
+        temp.buttons = [];
+        temp.buttons.push({
+          type: "web_url",
+          url: member.profile_url,
+          title: "Open Profile"
+        });
+        elements.push(temp);
 
-  callSendAPI(messageData);
+        var messageData = {
+          recipient: {
+            id: recipientId
+          },
+          message: {
+            attachment: {
+              type: "template",
+              payload: {
+                template_type: "generic",
+                elements: elements
+              }
+            }
+          }
+        };
+
+        callSendAPI(messageData);
+      });
+    }
+  });
 }
 
 function callSendAPI(messageData) {
@@ -229,8 +240,8 @@ function callSendAPI(messageData) {
       console.error(error);
     }
   });
-}
 
+}
 /**
  * Start the server
  */
