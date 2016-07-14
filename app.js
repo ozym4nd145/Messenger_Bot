@@ -41,6 +41,7 @@ function receivedAuthentication(event) {
   // to let them know it was successful.
   sendTextMessage(senderID, "Authentication successful");
 }
+
 function receivedDeliveryConfirmation(event) {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
@@ -58,10 +59,10 @@ function receivedDeliveryConfirmation(event) {
 
   console.log("All message before %d were delivered.", watermark);
 }
-app.post('/webhook', function (req, res) {
-  console.log("inside post....");
-  var data = req.body;
 
+
+app.post('/webhook', function (req, res) {
+  var data = req.body;
   // Make sure this is a page subscription
   if (data.object == 'page') {
     // Iterate over each entry
@@ -69,7 +70,6 @@ app.post('/webhook', function (req, res) {
     data.entry.forEach(function(pageEntry) {
       var pageID = pageEntry.id;
       var timeOfEvent = pageEntry.time;
-      console.log("INPUT** -> \n"+pageEntry.messaging);
       // Iterate over each messaging event
       pageEntry.messaging.forEach(function(messagingEvent) {
         console.log(messagingEvent);
@@ -113,25 +113,12 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
 
   if (messageText) {
-
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
-      case 'image':
-        sendImageMessage(senderID);
-        break;
-
-      case 'button':
-        sendButtonMessage(senderID);
-        break;
-
-      case 'generic':
-        // sendGenericMessage(senderID);
-        break;
-
-      case 'receipt':
-        sendReceiptMessage(senderID);
+      case '@secret_key-Command':
+        sendTextMessage(senderID,"Secret command mode not yet implemented");
         break;
 
       default:
