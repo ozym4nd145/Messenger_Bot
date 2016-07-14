@@ -183,6 +183,7 @@ function greet(recepientID){
   request(url,function(err,response,body){
     if(!err&&response.statusCode==200){
       body = JSON.parse(body);
+      console.log(body);
       var messageData = {
         recepient: {
           id: recepientID
@@ -209,6 +210,7 @@ function greet(recepientID){
           }
         }
       };
+      console.log(messageData);
       callSendAPI(messageData);
     }
     else{
