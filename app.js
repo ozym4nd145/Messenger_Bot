@@ -121,6 +121,9 @@ function receivedMessage(event) {
       case '@secret_key-Command':
         sendTextMessage(senderID,"Secret command mode not yet implemented");
         break;
+      case 'show members':
+        sendGenericMessage(senderID);
+        break;
 
       default:
         sendTextMessage(senderID, messageText);
@@ -141,6 +144,53 @@ function sendTextMessage(recipientId, messageText) {
     }
   };
   console.log(messageData);
+  callSendAPI(messageData);
+}
+
+function sendGenericMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: "Shubham Agrawal",
+            subtitle: "CEO @ Bozobaka",
+            item_url: "https://www.facebook.com/shubhs0707",
+            image_url: "http://techiitd.herokuapp.com/img/suyash.jpg",
+            buttons: [{
+              type: "web_url",
+              url: "https://www.facebook.com/shubhs0707",
+              title: "Open Facebook Profile"
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for second bubble",
+            }]
+          },{
+            title: "Suyash Agrawal",
+            subtitle: "Lead Developer",
+            item_url: "https://github.com/luffy1012/",
+            image_url: "http://techiitd.herokuapp.com/img/suyash.jpg",
+            buttons: [{
+              type: "web_url",
+              url: "https://github.com/luffy1012/",
+              title: "Open Github Page"
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for first bubble",
+            }],
+          }]
+        }
+      }
+    }
+  };
+
   callSendAPI(messageData);
 }
 
