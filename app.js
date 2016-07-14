@@ -178,7 +178,7 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 function sendMembers(recipientId) {
-  Members.find({},function(err,members){
+  Member.find({},function(err,members){
     if(err){
       console.log(err);
     }
