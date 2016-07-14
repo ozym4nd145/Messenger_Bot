@@ -178,15 +178,15 @@ function receivedMessage(event) {
   }
 }
 
-function greet(recepientID){
-  var url = "https://graph.facebook.com/v2.6/"+recepientID+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=EAAWxQDLkYNABAKQc9a9kdifBBZCDoIZCB2kyKB6I49PoS8RaIlYIug23NwSEZCme4ccjmp8lFHH79mL68xtz02PCgEgZBjYRFkQIFl7CpxiI0y4N9ioB1cPFSf5W4NC9bPAjwSETySo1uaxZCvXPiYkQVykLZAdtk6TuzCPwMZA7wZDZD";
+function greet(recipientID){
+  var url = "https://graph.facebook.com/v2.6/"+recipientID+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=EAAWxQDLkYNABAKQc9a9kdifBBZCDoIZCB2kyKB6I49PoS8RaIlYIug23NwSEZCme4ccjmp8lFHH79mL68xtz02PCgEgZBjYRFkQIFl7CpxiI0y4N9ioB1cPFSf5W4NC9bPAjwSETySo1uaxZCvXPiYkQVykLZAdtk6TuzCPwMZA7wZDZD";
   request(url,function(err,response,body){
     if(!err&&response.statusCode==200){
       body = JSON.parse(body);
       console.log(body);
       var messageData = {
-        recepient: {
-          id: recepientID
+        recipient: {
+          id: recipientID
         },
         message: {
           attachment: {
@@ -214,7 +214,7 @@ function greet(recepientID){
       callSendAPI(messageData);
     }
     else{
-      sendTextMessage(recepientID,"Hi!");
+      sendTextMessage(recipientID,"Hi!");
     }
   });
 }
