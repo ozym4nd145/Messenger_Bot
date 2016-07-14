@@ -161,7 +161,7 @@ function sendGenericMessage(recipientId) {
             title: "Shubham Agrawal",
             subtitle: "CEO @ Bozobaka",
             item_url: "https://www.facebook.com/shubhs0707",
-            image_url: "http://techiitd.herokuapp.com/img/suyash.jpg",
+            image_url: "http://techiitd.herokuapp.com/img/shubham.jpg",
             buttons: [{
               type: "web_url",
               url: "https://www.facebook.com/shubhs0707",
