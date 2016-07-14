@@ -199,23 +199,24 @@ function sendMembers(recipientId) {
         });
         elements.push(temp);
 
-        var messageData = {
-          recipient: {
-            id: recipientId
-          },
-          message: {
-            attachment: {
-              type: "template",
-              payload: {
-                template_type: "generic",
-                elements: elements
-              }
+      });
+      
+      var messageData = {
+        recipient: {
+          id: recipientId
+        },
+        message: {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: elements
             }
           }
-        };
+        }
+      };
 
-        callSendAPI(messageData);
-      });
+      callSendAPI(messageData);
     }
   });
 }
