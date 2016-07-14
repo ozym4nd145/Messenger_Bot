@@ -91,7 +91,14 @@ function receivedPostback(event) {
 
   // When a postback is called, we'll send a message back to the sender to
   // let them know it was successful
-  sendTextMessage(senderID, "Postback called");
+  switch (payload) {
+    case 'member_list':
+      sendMembers(senderID);
+      break;
+    default:
+      sendTextMessage(senderID, "Postback called");
+      break;
+  }
 }
 
 app.post('/webhook', function (req, res) {
@@ -155,7 +162,14 @@ function receivedMessage(event) {
       case 'show members':
         sendMembers(senderID);
         break;
-
+      case 'Hi':
+      case 'hi':
+      case 'Hello':
+      case 'hello':
+      case 'HI':
+      case "HELLO":
+        greet(senderID);
+        break;
       default:
         sendTextMessage(senderID, messageText);
     }
@@ -164,6 +178,43 @@ function receivedMessage(event) {
   }
 }
 
+function greet(recepientID){
+  var url = "https://graph.facebook.com/v2.6/"+recepientID+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=EAAWxQDLkYNABAKQc9a9kdifBBZCDoIZCB2kyKB6I49PoS8RaIlYIug23NwSEZCme4ccjmp8lFHH79mL68xtz02PCgEgZBjYRFkQIFl7CpxiI0y4N9ioB1cPFSf5W4NC9bPAjwSETySo1uaxZCvXPiYkQVykLZAdtk6TuzCPwMZA7wZDZD";
+  request(url,function(err,response,body){
+    if(!err&&response.statusCode==200){
+      var messageData = {
+        recepient: {
+          id: recepientID
+        },
+        message: {
+          attachment: {
+            type: "template",
+            payload: {
+              text: "Hi "+body.first_name,
+              template_type: "button",
+              buttons: [
+                {
+                  type: "web_url",
+                  url: "https://techiitd.herokuapp.com",
+                  title: "Go to Website"
+                },
+                {
+                  type: "postback",
+                  title: "Show Members",
+                  payload: "member_list"
+                }
+              ]
+            }
+          }
+        }
+      };
+      callSendAPI(messageData);
+    }
+    else{
+      sendTextMessage(recepientID,"Hi!");
+    }
+  });
+}
 
 function sendTextMessage(recipientId, messageText) {
   var messageData = {
