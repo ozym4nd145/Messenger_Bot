@@ -104,7 +104,7 @@ function receivedMessage(event) {
 
   console.log("Received message for user %d and page %d at %d with message:",
     senderID, recipientID, timeOfMessage);
-  console.log(JSON.stringify(message));
+  //console.log(JSON.stringify(message));
 
   var messageId = message.mid;
 
@@ -116,6 +116,7 @@ function receivedMessage(event) {
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
+    console.log(messageText);
     switch (messageText) {
       case '@secret_key-Command':
         sendTextMessage(senderID,"Secret command mode not yet implemented");
