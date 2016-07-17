@@ -3,9 +3,10 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var request = require("request");
 var Member = require("./models/member");
-
+var VALIDATION_STRING = process.env.VALIDATION_STRING;
+var PAGE_TOKEN = process.env.PAGE_TOKEN;
 var app = express();
-var connection_string = 'mongodb://localhost/yelpcamp';
+var connection_string = 'mongodb://localhost/messengerBot';
 // if OPENSHIFT env variables are present, use the available connection info:
 if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
   connection_string = "mongodb://"+process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
@@ -29,7 +30,7 @@ app.get("/",function(req,res){
 
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
-      req.query['hub.verify_token'] === VALIDATION_TOKEN) {
+      req.query['hub.verify_token'] === VALIDATION_STRING) {
     console.log("Validating webhook");
     res.status(200).send(req.query['hub.challenge']);
   } else {
@@ -141,7 +142,7 @@ function receivedMessage(event) {
   var timeOfMessage = event.timestamp;
   var message = event.message;
 
-  console.log("Received message for user %d and page %d at %d with message: %d",
+  console.log("Received message for user %d and page %d at %d with message: %s",
     senderID, recipientID, timeOfMessage,message);
   //console.log(JSON.stringify(message));
 
@@ -278,7 +279,7 @@ function sendMembers(recipientId) {
 function callSendAPI(messageData) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: "EAAWxQDLkYNABAKQc9a9kdifBBZCDoIZCB2kyKB6I49PoS8RaIlYIug23NwSEZCme4ccjmp8lFHH79mL68xtz02PCgEgZBjYRFkQIFl7CpxiI0y4N9ioB1cPFSf5W4NC9bPAjwSETySo1uaxZCvXPiYkQVykLZAdtk6TuzCPwMZA7wZDZD" },
+    qs: { access_token: PAGE_TOKEN },
     method: 'POST',
     json: messageData
 
